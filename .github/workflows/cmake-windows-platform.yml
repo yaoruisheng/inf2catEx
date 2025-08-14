@@ -1,0 +1,58 @@
+name: Automated Release
+
+on:
+  push:
+    tags:
+      - 'v*' # Trigger on tags like v1.0, v2.0, etc.
+
+permissions:
+  contents: write
+
+jobs:
+  build_and_release:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 构建 x86
+      - name: Configure and build x86
+        run: |
+          cmake -A Win32 -S . -B build_x86
+          cmake --build build_x86 --config Release
+
+      # 构建 x64
+      - name: Configure and build x64
+        run: |
+          cmake -A x64 -S . -B build_x64
+          cmake --build build_x64 --config Release
+
+      # 打包 x86
+      - name: Package x86 artifacts
+        run: |
+          mkdir -p release_x86
+          copy build_x86/Release/HookFileTime.dll release_x86/HookFileTime.dll
+          copy build_x86/Release/inf2catex.exe release_x86/inf2catex.exe
+          powershell Compress-Archive -Path release_x86/* -DestinationPath release_x86.zip
+
+      # 打包 x64
+      - name: Package x64 artifacts
+        run: |
+          mkdir -p release_x64
+          copy build_x64/Release/HookFileTime.dll release_x64/HookFileTime.dll
+          copy build_x64/Release/inf2catex.exe release_x64/inf2catex.exe
+          powershell Compress-Archive -Path release_x64/* -DestinationPath release_x64.zip
+
+      # 上传 Release
+      - name: Create or Update Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}
+          draft: false
+          prerelease: false
+          files: |
+            release_x86.zip
+            release_x64.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
