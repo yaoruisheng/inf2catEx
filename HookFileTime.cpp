@@ -13,7 +13,7 @@ static bool ParseMyTime(const char* env, SYSTEMTIME* st) {
     if (!env || !st) return false;
 
     SYSTEMTIME now{};
-    GetLocalTime(&now);  // fallback = current system time
+    GetSystemTime(&now);  // fallback = current system time
 
     int year   = now.wYear;
     int month  = now.wMonth;
