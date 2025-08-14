@@ -52,7 +52,7 @@ jobs:
           draft: false
           prerelease: false
           files: |
-            release_x86.zip
-            release_x64.zip
+            Release_x86.zip
+            Release_x64.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
