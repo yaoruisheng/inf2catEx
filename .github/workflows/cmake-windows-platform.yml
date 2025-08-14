@@ -32,16 +32,16 @@ jobs:
         run: |
           mkdir -p release_x86
           copy build_x86/Release/HookFileTime.dll release_x86/HookFileTime.dll
-          copy build_x86/Release/inf2catex.exe release_x86/inf2catex.exe
-          powershell Compress-Archive -Path release_x86/* -DestinationPath release_x86.zip
+          copy build_x86/Release/inf2catEx.exe release_x86/inf2catEx.exe
+          powershell Compress-Archive -Path release_x86/* -DestinationPath Release_x86.zip
 
       # 打包 x64
       - name: Package x64 artifacts
         run: |
           mkdir -p release_x64
           copy build_x64/Release/HookFileTime.dll release_x64/HookFileTime.dll
-          copy build_x64/Release/inf2catex.exe release_x64/inf2catex.exe
-          powershell Compress-Archive -Path release_x64/* -DestinationPath release_x64.zip
+          copy build_x64/Release/inf2catEx.exe release_x64/inf2catEx.exe
+          powershell Compress-Archive -Path release_x64/* -DestinationPath Release_x64.zip
 
       # 上传 Release
       - name: Create or Update Release
